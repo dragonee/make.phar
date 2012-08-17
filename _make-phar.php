@@ -23,6 +23,16 @@ if(!Phar::canWrite()) {
 }
 
 $directory = $args['DIRECTORY'];
+
+if(strlen($directory) == 0) {
+    fprintf(STDERR, "Directory string is empty.\n");
+    exit(1);
+}
+
+if($directory[0] != '/') {
+    $directory = getcwd() . '/' . $directory;
+}
+
 if(!file_exists($directory)) {
     fprintf(STDERR, "Directory $directory does not exist.\n");
     exit(1);
@@ -38,11 +48,12 @@ $directory = realpath($directory);
 $output_filename = $args['PHAR'];
 if(!$output_filename) {
     $output_filename = $directory . '.phar';
+} elseif($output_filename[0] != '/') {
+    $output_filename = getcwd() . '/' . $output_filename;
 }
 
 $phar = new Phar($output_filename);
 
-$phar->startBuffering();
 $phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)), $directory);
 
 $entry = $args['--entry'];
@@ -60,8 +71,6 @@ if($args['--shebang']) {
 }
 
 $phar->setStub($stub);
-
-$phar->stopBuffering();
 
 
 
