@@ -15,7 +15,7 @@ EOD;
 
 require "docopt/src/docopt.php";
 
-$args = Docopt\docopt($doc, array('version' => 'make-phar 0.1'));
+$args = Docopt\docopt($doc, array('version' => 'make-phar 0.9'));
 
 if(!Phar::canWrite()) {
     fprintf(STDERR, "Phar writing support is not enabled in php.ini. Please set phar.readonly to 0.\n");
